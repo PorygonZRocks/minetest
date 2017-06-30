@@ -27,12 +27,12 @@ local basepath = core.get_builtin_path()
 defaulttexturedir = core.get_texturepath_share() .. DIR_DELIM .. "base" ..
 					DIR_DELIM .. "pack" .. DIR_DELIM
 
-dofile(basepath .. "common" .. DIR_DELIM .. "async_event.lua")
-dofile(basepath .. "common" .. DIR_DELIM .. "filterlist.lua")
-dofile(basepath .. "fstk" .. DIR_DELIM .. "buttonbar.lua")
-dofile(basepath .. "fstk" .. DIR_DELIM .. "dialog.lua")
-dofile(basepath .. "fstk" .. DIR_DELIM .. "tabview.lua")
-dofile(basepath .. "fstk" .. DIR_DELIM .. "ui.lua")
+dofile(basepath .. DIR_DELIM .. "common" .. DIR_DELIM .. "async_event.lua")
+dofile(basepath .. DIR_DELIM .. "common" .. DIR_DELIM .. "filterlist.lua")
+dofile(basepath .. DIR_DELIM .. "fstk" .. DIR_DELIM .. "buttonbar.lua")
+dofile(basepath .. DIR_DELIM .. "fstk" .. DIR_DELIM .. "dialog.lua")
+dofile(basepath .. DIR_DELIM .. "fstk" .. DIR_DELIM .. "tabview.lua")
+dofile(basepath .. DIR_DELIM .. "fstk" .. DIR_DELIM .. "ui.lua")
 dofile(menupath .. DIR_DELIM .. "common.lua")
 dofile(menupath .. DIR_DELIM .. "gamemgr.lua")
 dofile(menupath .. DIR_DELIM .. "modmgr.lua")
@@ -41,7 +41,7 @@ dofile(menupath .. DIR_DELIM .. "textures.lua")
 
 dofile(menupath .. DIR_DELIM .. "dlg_config_world.lua")
 dofile(menupath .. DIR_DELIM .. "dlg_settings_advanced.lua")
-if PLATFORM ~= "Android" then
+if PLATFORM ~= "Simple" then
 	dofile(menupath .. DIR_DELIM .. "dlg_create_world.lua")
 	dofile(menupath .. DIR_DELIM .. "dlg_delete_mod.lua")
 	dofile(menupath .. DIR_DELIM .. "dlg_delete_world.lua")
@@ -53,7 +53,7 @@ local tabs = {}
 tabs.settings = dofile(menupath .. DIR_DELIM .. "tab_settings.lua")
 tabs.mods = dofile(menupath .. DIR_DELIM .. "tab_mods.lua")
 tabs.credits = dofile(menupath .. DIR_DELIM .. "tab_credits.lua")
-if PLATFORM == "Android" then
+if PLATFORM == "Simple" then
 	tabs.simple_main = dofile(menupath .. DIR_DELIM .. "tab_simple_main.lua")
 else
 	tabs.local_game = dofile(menupath .. DIR_DELIM .. "tab_local.lua")
@@ -74,7 +74,7 @@ local function init_globals()
 	-- Init gamedata
 	gamedata.worldindex = 0
 
-	if PLATFORM == "Android" then
+	if PLATFORM == "Simple" then
 		local world_list = core.get_worlds()
 		local world_index
 
@@ -129,7 +129,7 @@ local function init_globals()
 	-- Create main tabview
 	local tv_main = tabview_create("maintab", {x = 12, y = 5.4}, {x = 0, y = 0})
 
-	if PLATFORM == "Android" then
+	if PLATFORM == "Simple" then
 		tv_main:add(tabs.simple_main)
 		tv_main:add(tabs.settings)
 	else
@@ -146,14 +146,14 @@ local function init_globals()
 	tv_main:set_global_event_handler(main_event_handler)
 	tv_main:set_fixed_size(false)
 
-	if PLATFORM ~= "Android" then
+	if PLATFORM ~= "Simple" then
 		tv_main:set_tab(core.settings:get("maintab_LAST"))
 	end
 	ui.set_default("maintab")
 	tv_main:show()
 
 	-- Create modstore ui
-	if PLATFORM == "Android" then
+	if PLATFORM == "Simple" then
 		modstore.init({x = 12, y = 6}, 3, 2)
 	else
 		modstore.init({x = 12, y = 8}, 4, 3)
