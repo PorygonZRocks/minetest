@@ -43,6 +43,10 @@ local labels = {
 		fgettext("2x"),
 		fgettext("4x"),
 		fgettext("8x")
+	},
+	main_menu_style = {
+	    fgettext("Full Menu"),
+		fgettext("Simple Menu")
 	}
 }
 
@@ -66,6 +70,10 @@ local dd_options = {
 	antialiasing = {
 		table.concat(labels.antialiasing, ","),
 		{"0", "2", "4", "8"}
+	},
+	main_menu_style = {
+		table.concat(labels.main_menu_style, ","),
+		{"full", "simple"}
 	}
 }
 
@@ -108,6 +116,13 @@ local getSettingIndex = {
 			if antialiasing_setting == dd_options.antialiasing[2][i] then
 				return i
 			end
+		end
+		return 1
+	end,
+	MainMenuStyle = function()
+		local style = core.settings:get("main_menu_style")
+		for idx, name in pairs(dd_options.main_menu_style[2]) do
+			if style == name then return idx end
 		end
 		return 1
 	end
@@ -203,11 +218,13 @@ local function formspec(tabview, name, tabdata)
 		"label[3.85,3.45;" .. fgettext("Screen:") .. "]" ..
 		"checkbox[3.85,3.6;cb_autosave_screensize;" .. fgettext("Autosave screen size") .. ";"
 				.. dump(core.settings:get_bool("autosave_screensize")) .. "]" ..
+		"dropdown[3.85,5.4;3.85;dd_main_menu_style;" .. dd_options.main_menu_style[1] .. ";"
+				.. getSettingIndex.MainMenuStyle() .. "]" ..
 		"box[7.75,0;4,4.4;#999999]" ..
 		"checkbox[8,0;cb_shaders;" .. fgettext("Shaders") .. ";"
 				.. dump(core.settings:get_bool("enable_shaders")) .. "]"
 
-	if PLATFORM == "Android" then
+	if core.settings:get("main_menu_style") == "simple" then
 		tab_string = tab_string ..
 			"button[8,4.75;3.75,0.5;btn_reset_singleplayer;"
 			.. fgettext("Reset singleplayer world") .. "]"
@@ -218,7 +235,7 @@ local function formspec(tabview, name, tabdata)
 	end
 
 	tab_string = tab_string ..
-		"button[0,4.85;3.75,0.5;btn_advanced_settings;"
+		"button[0,4.75;3.75,0.5;btn_advanced_settings;"
 		.. fgettext("Advanced Settings") .. "]"
 
 
@@ -247,20 +264,17 @@ local function formspec(tabview, name, tabdata)
 					.. dump(core.settings:get_bool("enable_waving_plants")) .. "]"
 	else
 		tab_string = tab_string ..
-			"label[8.38,0.7;" .. core.colorize("#888888",
-					fgettext("Bump Mapping")) .. "]" ..
-			"label[8.38,1.2;" .. core.colorize("#888888",
-					fgettext("Tone Mapping")) .. "]" ..
-			"label[8.38,1.7;" .. core.colorize("#888888",
-					fgettext("Normal Mapping")) .. "]" ..
-			"label[8.38,2.2;" .. core.colorize("#888888",
-					fgettext("Parallax Occlusion")) .. "]" ..
-			"label[8.38,2.7;" .. core.colorize("#888888",
-					fgettext("Waving Water")) .. "]" ..
-			"label[8.38,3.2;" .. core.colorize("#888888",
-					fgettext("Waving Leaves")) .. "]" ..
-			"label[8.38,3.7;" .. core.colorize("#888888",
-					fgettext("Waving Plants")) .. "]"
+			"tablecolumns[color;text]" ..
+			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
+			"table[8.33,0.7;3.5,4;shaders;" ..
+				"#888888," .. fgettext("Bump Mapping") .. "," ..
+				"#888888," .. fgettext("Tone Mapping") .. "," ..
+				"#888888," .. fgettext("Normal Mapping") .. "," ..
+				"#888888," .. fgettext("Parallax Occlusion") .. "," ..
+				"#888888," .. fgettext("Waving Water") .. "," ..
+				"#888888," .. fgettext("Waving Leaves") .. "," ..
+				"#888888," .. fgettext("Waving Plants") .. "," ..
+				";1]"
 	end
 
 	return tab_string
@@ -363,6 +377,12 @@ local function handle_settings_buttons(this, fields, tabname, tabdata)
 	for i = 1, #labels.node_highlighting do
 		if fields["dd_node_highlighting"] == labels.node_highlighting[i] then
 			core.settings:set("node_highlighting", dd_options.node_highlighting[2][i])
+			ddhandled = true
+		end
+	end
+	for i = 1, #labels.main_menu_style do
+		if fields["dd_main_menu_style"] == labels.main_menu_style[i] then
+			core.settings:set("main_menu_style", dd_options.main_menu_style[2][i])
 			ddhandled = true
 		end
 	end
