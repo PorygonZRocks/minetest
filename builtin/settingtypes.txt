@@ -1519,7 +1519,7 @@ curl_file_download_timeout (cURL file download timeout) int 300000
 high_precision_fpu (High-precision FPU) bool true
 
 #    Main menu style:
-#    -   Full (default):  Multple singleplayer worlds, subgame choice, texture pack chooser, etc.
+#    -   Full (default):  Multiple singleplayer worlds, subgame choice, texture pack chooser, etc.
 #    -   Simple: One singleplayer world, no subgame or texture pack choosers. May be necessary for smaller screens.
 main_menu_style (Main menu style) enum full full,simple
 
