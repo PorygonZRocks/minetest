@@ -43,10 +43,6 @@ local labels = {
 		fgettext("2x"),
 		fgettext("4x"),
 		fgettext("8x")
-	},
-	main_menu_style = {
-	    fgettext("Full Menu"),
-		fgettext("Simple Menu")
 	}
 }
 
@@ -70,10 +66,6 @@ local dd_options = {
 	antialiasing = {
 		table.concat(labels.antialiasing, ","),
 		{"0", "2", "4", "8"}
-	},
-	main_menu_style = {
-		table.concat(labels.main_menu_style, ","),
-		{"full", "simple"}
 	}
 }
 
@@ -116,13 +108,6 @@ local getSettingIndex = {
 			if antialiasing_setting == dd_options.antialiasing[2][i] then
 				return i
 			end
-		end
-		return 1
-	end,
-	MainMenuStyle = function()
-		local style = core.settings:get("main_menu_style")
-		for idx, name in pairs(dd_options.main_menu_style[2]) do
-			if style == name then return idx end
 		end
 		return 1
 	end
@@ -218,8 +203,6 @@ local function formspec(tabview, name, tabdata)
 		"label[3.85,3.45;" .. fgettext("Screen:") .. "]" ..
 		"checkbox[3.85,3.6;cb_autosave_screensize;" .. fgettext("Autosave screen size") .. ";"
 				.. dump(core.settings:get_bool("autosave_screensize")) .. "]" ..
-		"dropdown[3.85,5.4;3.85;dd_main_menu_style;" .. dd_options.main_menu_style[1] .. ";"
-				.. getSettingIndex.MainMenuStyle() .. "]" ..
 		"box[7.75,0;4,4.4;#999999]" ..
 		"checkbox[8,0;cb_shaders;" .. fgettext("Shaders") .. ";"
 				.. dump(core.settings:get_bool("enable_shaders")) .. "]"
@@ -377,12 +360,6 @@ local function handle_settings_buttons(this, fields, tabname, tabdata)
 	for i = 1, #labels.node_highlighting do
 		if fields["dd_node_highlighting"] == labels.node_highlighting[i] then
 			core.settings:set("node_highlighting", dd_options.node_highlighting[2][i])
-			ddhandled = true
-		end
-	end
-	for i = 1, #labels.main_menu_style do
-		if fields["dd_main_menu_style"] == labels.main_menu_style[i] then
-			core.settings:set("main_menu_style", dd_options.main_menu_style[2][i])
 			ddhandled = true
 		end
 	end
