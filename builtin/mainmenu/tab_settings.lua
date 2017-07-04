@@ -17,6 +17,12 @@
 
 --------------------------------------------------------------------------------
 
+local menustyle == core.settings:get("main_menu_style")
+if menustyle == "default" then
+    if PLATFORM == "Android" then
+        menustyle = "simple"
+    else
+        menustyle = "full"
 local labels = {
 	leaves = {
 		fgettext("Opaque Leaves"),
@@ -207,7 +213,7 @@ local function formspec(tabview, name, tabdata)
 		"checkbox[8,0;cb_shaders;" .. fgettext("Shaders") .. ";"
 				.. dump(core.settings:get_bool("enable_shaders")) .. "]"
 
-	if core.settings:get("main_menu_style") == "simple" then
+	if menustyle == "simple" then
 		tab_string = tab_string ..
 			"button[8,4.75;3.75,0.5;btn_reset_singleplayer;"
 			.. fgettext("Reset singleplayer world") .. "]"
