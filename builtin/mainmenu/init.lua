@@ -25,6 +25,11 @@ mt_color_dark_green = "#25C191"
 local menupath = core.get_mainmenu_path()
 local basepath = core.get_builtin_path()
 local menustyle = core.settings:get("main_menu_style")
+if menustyle == "default" then
+    if PLATFORM == "Android" then
+        menustyle = "simple"
+    else
+        menustyle = "full"
 defaulttexturedir = core.get_texturepath_share() .. DIR_DELIM .. "base" ..
 					DIR_DELIM .. "pack" .. DIR_DELIM
 
